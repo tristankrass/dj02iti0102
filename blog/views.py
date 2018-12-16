@@ -1,9 +1,5 @@
-from datetime import timezone
 from platform import python_version
-from urllib.parse import quote_plus
-
-from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django import get_version as django_version
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
@@ -13,7 +9,7 @@ from django.views.generic.edit import ModelFormMixin
 import requests
 from blog.models import Post, Comment
 from users.models import User
-from .forms import PostUpload, CommentForm
+from .forms import PostUpload
 
 
 class HomeView(ListView):
@@ -107,25 +103,17 @@ class TextPostCreateView(LoginRequiredMixin, CreateView):
 
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    template_name = 'blog/post_update.html'
     model = Post
-    fields = ('thumbnail', 'title', 'body')
+    template_name = 'blog/post_update.html'
+    fields = ('title', 'body', 'thumbnail')
     context_object_name = 'blog_post'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
     def test_func(self):
         return self.get_object().is_author(self.request.user) or self.request.user.is_superuser
-
-    def upload(self, request):
-        if request.method == 'POST':
-            form = PostUpload(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                return redirect('blog:home')
-        else:
-            form = PostUpload()
-        return render(request, 'blog/post_detail.html', {
-            'form': form
-        })
 
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -138,22 +126,26 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.get_object().is_author(self.request.user) or self.request.user.is_superuser
 
 
-def make_post(request):
+class MakeSpecialPost(LoginRequiredMixin, CreateView):
+    model = Post
+    template_name = 'blog/post_create_special.html'
+    fields = ('title', 'body', 'thumbnail')
     url = 'https://api.chucknorris.io/jokes/random'
     response = requests.get(url).json()
-    title = response.get('value')
     quote = response.get('value')
+    title = " ".join(quote.split()[:3])
     thumbnail = response.get('icon_url')
-    if request.method == 'POST':
-        form = PostUpload(request.POST, request.FILES)
-        form.instance.author = request.user
+    context_object_name = 'blog_post'
 
-        if form.is_valid():
-            form.save()
-            return redirect('blog:home')
-    else:
-        form = PostUpload(initial={'title': title, 'body': quote, 'thumbnail': thumbnail})
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
-    return render(request, 'blog/post_create_special.html', {
-        'form': form
-    })
+    def get_initial(self):
+        return {
+            'title': self.title,
+            'body': self.quote
+        }
+
+    def test_func(self):
+        return self.get_object().is_author(self.request.user) or self.request.user.is_superuser

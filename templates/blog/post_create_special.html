@@ -1,29 +1,43 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="field">
-            {{ form.title }}
+    <div class="column is-8 is-offset-2">
+        <div class="box has-box-shadow">
+            <h1 class="title">{% trans "Special Conntent feat: Chuck Norris" %}</h1>
+            <form method="post" action="" enctype="multipart/form-data" {% block form_attrs %}{% endblock %}>
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="notification is-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+                <div class="field">
+                    {#                    <input name="title" value="{{ blog_post.title }}" class="input" type="text"#}
+                    {#                           placeholder="Title" autofocus required>#}
+                    {#                    <span class="icon is-small is-left"><i class="fas fa-heading"></i></span>#}
+                    <p class="control has-icons-left">
+                        {{ form.title }}
+                    </p>
+                    <div class="has-text-danger">{{ form.title.errors }}</div>
+                </div>
+                <div class="field">
+                    <p class="control has-icons-left">
+                        {{ form.thumbnail }}
+                    </p>
+                    <div class="has-text-danger">{{ form.title.errors }}</div>
+                </div>
+                <div class="level">
+                    {{ form.body }}
+                </div>
+                <button class="button is-primary" type="submit">{% trans "Create" %}</button>
+                <hr/>
+            </form>
+            <div class="level-right">
+                <a href="{% url 'blog:home' %}" class="button is-dark">Return Home</a>
+            </div>
         </div>
-        <div class="field">
-            {{ form.body }}
-        </div>
-        <div class="field">
-            {{ form.thumbnail }}
-        </div>
-        <div class="level">
 
-
-            <input type="submit" class="button is-primary" value="Submit">
-        </div>
-    </form>
-    <div class="level">
-        <div class="level-left"></div>
-        <div class="level-right">
-            <p><a href="{% url 'blog:home' %}" class="button is-dark">Return to home</a></p>
-
-        </div>
     </div>
 
 {% endblock %}
