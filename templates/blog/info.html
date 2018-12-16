@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <div class="has-margin-b-lg">
+        <h4 class="title is-4">
+            {% blocktrans %}
+                Find the task description
+                <a href="https://ained.ttu.ee/course/view.php?id=193#section-17">here</a>.
+            {% endblocktrans %}
+        </h4>
+    </div>
+{% endblock %}
+
+{% block extra_content %}
+    <section class="hero is-light is-bold">
+        <div class="hero-body">
+            <div class="container">
+                <nav class="level">
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">{% trans "Total Users" %}</p>
+                            <p class="title">{{ number_of_users }}</p>
+                        </div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">{% trans "Total Posts" %}</p>
+                            <p class="title">{{ number_of_posts }}</p>
+                        </div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">{% trans "Total Comments" %}</p>
+                            <p class="title">{{ number_of_comments }}</p>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="columns is-mobile is-centered">
+            <div class="field is-grouped is-grouped-multiline">
+                <div class="control">
+                    <div class="tags has-addons">
+                        <span class="tag is-dark">{% trans "django" %}</span>
+                        <span class="tag is-info">{{ django_version }}</span>
+                    </div>
+                </div>
+                <div class="control">
+                    <div class="tags has-addons">
+                        <span class="tag is-dark">{% trans "python" %}</span>
+                        <span class="tag is-info">{{ python_version }}</span>
+                    </div>
+                </div>
+                <div class="control">
+                    <div class="tags has-addons">
+                        <span class="tag is-dark">{% trans "chat" %}</span>
+                        <span class="tag has-addons is-info">
+                            <a href="https://discord.gg/A7BjPrj">
+                                <i class="fab fa-lg fa-discord has-text-white"></i>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

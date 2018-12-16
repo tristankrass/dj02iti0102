@@ -1,0 +1,22 @@
+{
+  "name": "django2",
+  "version": "1.0.0",
+  "description": "last project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.cs.ttu.ee:rareba/kwargs.git"
+  },
+  "author": "Ragnar Rebase",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://www.kwargs.xyz/"
+  },
+  "homepage": "https://gitlab.cs.ttu.ee/rareba/kwargs",
+  "devDependencies": {
+    "eslint": "^5.9.0"
+  }
+}

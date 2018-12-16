@@ -1,0 +1,54 @@
+{% extends "base.html" %}{% load static i18n %}
+{% block title %}{% trans "User" %}: {{ blog_user.username }}{% endblock %}
+{% block content %}
+
+    <section class="tile is-ancestor is-vertical">
+        <form method="post" enctype="multipart/form-data" class="empty-form">
+            {% csrf_token %}
+            <div class="tile is-parent">
+                <article class="tile is-child notification is-white">
+                    <div class="level">
+                        <div class="level-left">
+                            <p class="title">{{ user.username }}</p>
+                        </div>
+                        <div class="level-right">
+                            <figure class="image is-128x128">
+                                <img src="{{ user.avatar.url }}" alt="avatar" class="is-rounded" height="300"
+                                     width="300">
+                            </figure>
+                        </div>
+                    </div>
+                    <p class="subtitle">Would you like to change details about yourself?</p>
+                    <div class="field ">
+                        <p class="control has-icons-left">
+                            {{ form.avatar }}
+                        </p>
+                        <div class="has-text-danger">{{ form.username.errors }}</div>
+                    </div>
+                    <h5 class="has-margin-b-lg">Username:</h5>
+                    <div class="field ">
+                        <p class="control has-icons-left">
+                            <input name="username" class="input" type="text" placeholder="{{ user.username }}" autofocus
+                                   required value="{{ user.username }}">
+                            <span
+                                class="icon is-small is-left"><i class="fas fa-user"></i></span>
+                        </p>
+                        <div class="has-text-danger">{{ form.username.errors }}</div>
+                    </div>
+                    <div class="level">
+                        <div class="level-left"></div>
+                        <div class="level-right">
+                            <input type="submit" class="button is-link" value="{% trans "Submit" %}">
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </form>
+        <h1>
+
+        </h1>
+
+
+    </section>
+
+{% endblock content  %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+
+{% block content %}
+    {% if user.is_staff  %}
+        <div class="level">
+            <div class="level-left"></div>
+            <div class="level-right">
+                <form method="POST" enctype="multipart/form-data">
+                    <a href="{% url 'blog:post_create'  %}" type="submit" role="button" id="addContent"
+                    > Add
+                        content </a>
+                </form>
+            </div>
+        </div>
+    {% endif  %}
+    <div class="column is-four-fifths">
+        {% if user.is_authenticated %}
+            <div class="level">
+                <div class="level-left has-margin-b-md">
+                    <div class="level-item">
+                        <a class="button is-info is-outlined" href="{% url 'blog:text_post_create' %}">
+                            <span class="icon is-medium"><i class="fas fa-edit"></i></span>
+                            <span>{% trans "New Text Post" %}</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="level-right has-margin-b-md">
+                    <div class="level-item">
+                        <div class="field">
+                            <em>{% trans "Built with Django" %}</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="has-text-grey-light has-text-weight-semibold is-uppercase">
+            {% trans "Recent posts" %}
+        </div>
+        <hr/>
+        {% for post in posts %}
+            <div class="has-margin-b-lg">
+                {% if post.thumbnail %}
+                    <a class="has-text-dark" href="{{ post.get_absolute_url }}">
+                        <figure class="is-marginless">
+                            <img class="is-128x128" src="{{ post.thumbnail.url }}">
+                        </figure>
+                    </a>
+                {% endif %}
+                <h4 class="title is-4 is-marginless">
+                    <a class="has-text-dark" href="{{ post.get_absolute_url }}">{{ post.title|truncatechars:50 }}</a>
+                </h4>
+                <div class="has-text-grey has-margin-b-sm">
+                    {% blocktrans with url=post.author.get_absolute_url username=post.author.username|truncatechars:50 %}
+                        Posted by <a href="{{ url }}">{{ username }}</a>
+                    {% endblocktrans %}
+                    {{ post.created_timestamp|naturaltime }}
+                </div>
+                {% if post.image %}
+                    <figure class="image is-square">
+                        <img src="{{ post.image.url }}">
+                    </figure>
+                {% endif %}
+                <p>{{ post.body|truncatechars:200 }}</p>
+            </div>
+        {% empty %}
+            <div>{% trans "There are no posts yet" %} 😕</div>
+        {% endfor %}
+        {% include 'pagination.html' %}
+    </div>
+{% endblock %}

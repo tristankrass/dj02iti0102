@@ -1,0 +1,9 @@
+{% extends "blog/post_create_base.html" %}
+{% load i18n %}
+
+{% block additional_fields %}
+    <div class="field">
+        <textarea name="body" class="textarea" placeholder="{% trans 'Write the post body here ...' %}" required></textarea>
+        <div class="has-text-danger">{{ form.body.errors }}</div>
+    </div>
+{% endblock %}

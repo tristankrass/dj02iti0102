@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Django Blog | Users" %}{% endblock %}
+
+{% block content %}
+    <div class="column is-8 is-offset-2">
+        <div class="card has-box-shadow">
+            <div class="has-background-info has-padding-none has-margin-none">
+                <h1 class="title is-3 has-padding-md has-background-grey has-text-white">
+                    <span>{% trans "Users List" %}</span>
+                </h1>
+            </div>
+
+            <div class="has-padding-lg">
+                {% for blog_user in blog_users %}
+                    <div class="level">
+                        <div class="level-left">
+                            <div>
+                                <figure class="image is-rounded is-64x64">
+                                    {% if blog_user.avatar_url %}
+                                        <img class="is-rounded" src="{{ blog_user.avatar_url }}">
+                                    {% else %}
+                                        <img class="is-rounded" src="{{ blog_user.avatar.url }}">
+                                    {% endif %}
+                                </figure>
+                            </div>
+                            <div class="has-text-grey has-margin-l-lg">
+                                {% if blog_user.username == user.username %}
+                                    <a
+                                        class="is-active has-text-success"
+                                        href="{% url 'users:detail' blog_user.username %}">{{ blog_user.username }}
+                                    </a>
+                                {% else %}
+                                    <a
+                                        class="has-text-grey"
+                                        href="{% url 'users:detail' blog_user.username %}">{{ blog_user.username }}
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="level-right">
+                            <a class="button is-primary is-rounded is-small"
+                               href="{% url 'users:follow'  blog_user.username user.username %}">
+
+                                <span class="icon is-small">
+                                  <i class="fas fa-heart"></i>
+                                    {% if blog_user in user.follows.all %}
+                                        </span>{% trans "Following" %}<span>
+                                         <a class="button is-warning is-rounded is-small"
+                                            href="{% url 'users:unfollow'  blog_user.username user.username %}">
+                                        <span class="icon is-small">
+                                         <i class="fas fa-exclamation-circle"></i>
+                                                </span>{% trans "UnFollow" %}<span>
+                                        </span>
+                                        </a>
+                                        {% elif user.username == blog_user.username %}
+                                         </span>{% trans "You" %}<span>
+                                        {% else %}
+                                            </span>{% trans "Follow" %}<span>
+                                    {% endif %}
+                                    </span>
+                            </a>
+
+                        </div>
+                    </div>
+                {% endfor %}
+                {% include 'pagination.html' %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+

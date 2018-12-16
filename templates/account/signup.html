@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Django Blog | Sign up" %}{% endblock %}
+
+{% block content %}
+    <div class="has-text-centered">
+        <div class="column is-4 is-offset-4">
+            <div class="box has-box-shadow">
+                <h1 class="title">{% trans "Sign Up" %}</h1>
+                <form id="signup_form" method="post" action="{% url 'account_signup' %}">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="notification is-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    <div class="field">
+                        <p class="control has-icons-left">
+                            <input name="username" class="input" type="text"
+                                   placeholder="Username" autofocus required>
+                            <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
+                        </p>
+                        <div class="has-text-danger">{{ form.username.errors }}</div>
+                    </div>
+                    <div class="field">
+                        <p class="control has-icons-left">
+                            <input name="email" class="input" type="email"
+                                   placeholder="Email">
+                            <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
+                        </p>
+                        <div class="has-text-danger">{{ form.email.errors }}</div>
+                    </div>
+                    <div class="field">
+                        <p class="control has-icons-left">
+                            <input name="password1" class="input" type="password"
+                                   placeholder="Password" required>
+                            <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
+                        </p>
+                        <div class="has-text-danger">{{ form.password1.errors }}</div>
+                    </div>
+                    <div class="field">
+                        <p class="control has-icons-left">
+                            <input name="password2" class="input" type="password"
+                                   placeholder="Confirm Password" required>
+                            <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
+                        </p>
+                        <div class="has-text-danger">{{ form.password2.errors }}</div>
+                    </div>
+                    {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                    {% endif %}
+                    <button class="button is-primary" type="submit">{% trans "Sign Up" %}</button>
+                </form>
+            </div>
+            <p class="has-text-grey">
+                {% blocktrans %}Already have an account? <a href="{{ login_url }}">Sign In</a>.{% endblocktrans %}
+            </p>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "User" %}: {{ blog_user.username }}{% endblock %}
+
+{% block content %}
+    <div class="columns has-margin-b-lg">
+        <div class="column has-margin-b-lg">
+            <figure class="media">
+                <p class="image is-128x128">
+                    <img src="{{ blog_user.avatar.url }}">
+                </p>
+            </figure>
+            {% if blog_user.username %}
+                <h5 class="title is-5">{{ blog_user.username }}</h5>
+            {% endif %}
+            {% if blog_user.name %}
+                <h6 class="subtitle is-6 title">{{ blog_user.name }}</h6>
+            {% endif %}
+        </div>
+        <div class="column">
+            {% if blog_user.username == user.username %}
+                <div class="container">
+                    <p><span class="title">{{ blog_user.username }}</span>, Would you like to change your information?
+                    </p>
+                    <a class="button is-info"
+                       href="{% url 'users:changeDetails' blog_user.username %}">{% trans "Change Details" %}</a>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    {% if nr_of_posts %}
+        <hr>
+        <h1 class="title">Here are {{ blog_user.username }} Recent Posts.</h1>
+        <hr>
+        <section class="section">
+            <div class="columns">
+                {% for blog_post in blog_posts %}
+                    <div class="column">
+                        <h4 class="title is-4 is-marginless">
+                            <a class="has-text-dark"
+                               href="{{ blog_post.get_absolute_url }}">{{ blog_post.title|truncatechars:50 }}</a>
+                        </h4>
+                        <p>
+                            {{ blog_post.body|truncatechars:50 }}
+                        </p>
+                        {% if blog_post.thumbnail %}
+                            <a class="has-text-dark" href="{{ blog_post.get_absolute_url }}">
+                                <figure class="is-marginless">
+                                    <img class="is-128x128" src="{{ blog_post.thumbnail.url }}">
+                                </figure>
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+            </div>
+        </section>
+    {% endif %}
+
+
+{% endblock content %}
+
+{% block extra_content %}
+    <hr/>
+    <section class="hero is-bold">
+        <div class="hero-body">
+            <div class="container">
+                <nav class="level">
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">{% trans "Followers" %}</p>
+                            <p class="title">
+                                {{ blog_user.followed_by.count }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">{% trans "Posts" %}</p>
+                            <p class="title">{{ nr_of_posts }}</p>
+                        </div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">{% trans "Comments" %}</p>
+                            <p class="title">{{ nr_of_comments }}</p>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </section>
+{% endblock %}

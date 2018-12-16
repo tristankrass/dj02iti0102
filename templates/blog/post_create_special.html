@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% load i18n %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="field">
+            {{ form.title }}
+        </div>
+        <div class="field">
+            {{ form.body }}
+        </div>
+        <div class="field">
+            {{ form.thumbnail }}
+        </div>
+        <div class="level">
+
+
+            <input type="submit" class="button is-primary" value="Submit">
+        </div>
+    </form>
+    <div class="level">
+        <div class="level-left"></div>
+        <div class="level-right">
+            <p><a href="{% url 'blog:home' %}" class="button is-dark">Return to home</a></p>
+
+        </div>
+    </div>
+
+{% endblock %}
