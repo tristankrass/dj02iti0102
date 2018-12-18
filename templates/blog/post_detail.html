@@ -53,72 +53,99 @@
             </article>
         </form>
         {% for comment in post.comments.all %}
-            <article class="media">
+            {% if comment.parent is None %}
+                <article class="media">
                 <figure class="media-left">
                     <p class="image is-64x64">
                         <img src="{{ comment.author.avatar.url }}">
                     </p>
-                </figure>
+                </figu re>
                 <div class="media-content">
-                    <div class="content">
-                        <p>
-                            <strong>{{ comment.author.name }}</strong>
-                            <small>
-                                <a
-                                    class="has-text-grey"
-                                    href="{% url 'users:detail' comment.author.username %}">{{ comment.author.username }}
-                                </a>
-                            </small>
-                            <small>{{ comment.created_timestamp|naturaltime }}</small>
-                            <br>
-                            <span>{{ comment.body|truncatechars:255 }}</span>
-                        </p>
-                    </div>
-                    <form method="post" action="" class="has-margin-b-lg">
-                        {% csrf_token %}
-                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                        <article class="media has-margin-t-lg">
-                            <figure class="media-left">
-                                <p class="image is-64x64">
-                                    <img src="{{ user.avatar.url }}">
+                <div class="content">
+                    <p>
+                        <strong>{{ comment.author.name }}</strong>
+                        <small>
+                            <a
+                                class="has-text-grey"
+                                href="{% url 'users:detail' comment.author.username %}">{{ comment.author.username }}
+                            </a>
+                        </small>
+                        <small>{{ comment.created_timestamp|naturaltime }}</small>
+                        <br>
+                        <span>{{ comment.body|truncatechars:255 }}</span>
+                    </p>
+                </div>
+                {% for child_comment in comment.children %}
+                    <article class="media">
+                        <figure class="media-left">
+                            <p class="image is-64x64">
+                                <img src="{{ child_comment.author.avatar.url }}">
+                            </p>
+                        </figure>
+                        <div class="media-content">
+                            <div class="content">
+                                <p>
+                                    <strong>{{ child_comment.author.name }}</strong>
+                                    <small>
+                                        <a
+                                            class="has-text-grey"
+                                            href="{% url 'users:detail' child_comment.author.username %}">{{ child_comment.author.username }}
+                                        </a>
+                                    </small>
+                                    <small>{{ child_comment.created_timestamp|naturaltime }}</small>
+                                    <br>
+                                    <span>{{ child_comment.body|truncatechars:255 }}</span>
                                 </p>
-                            </figure>
-                            <div class="media-content">
-                                <div class="field">
-                                    <p class="control">
+                            </div>
+                        </div>
+                    </article>
+
+                {% endfor %}
+                <form method="post" action="" class="has-margin-b-lg is-hidden" id="replyToComment">
+                    {% csrf_token %}
+                    <article class="media has-margin-t-lg">
+                        <figure class="media-left">
+                            <p class="image is-64x64">
+                                <img src="{{ user.avatar.url }}">
+                            </p>
+                        </figure>
+                        <div class="media-content">
+                            <div class="field">
+                                <p class="control">
                             <textarea name="body" class="textarea" placeholder="{% trans 'Add a comment...' %}"
                                       required></textarea>
-                                    </p>
-                                </div>
-                                <div class="has-text-danger">{{ form.body.errors }}</div>
-                                <nav class="level">
-                                    <div class="level-left">
-                                        <div class="level-item">
-                                            <button class="button is-info" type="submit">{% trans "Reply" %}</button>
-                                        </div>
-                                    </div>
-                                </nav>
+                                </p>
                             </div>
-                        </article>
-                    </form>
-                    {% for reply in comment.children %}
-                        <h1>
-                            {{ reply.body }}
-                            {{ reply.author }}
-                            {{ reply.id }}
-                        </h1>
-                    {% endfor %}
-                    <nav class="level is-mobile">
-                        <div class="level-left">
-                            <a class="level-item">
-                                <span id="replyButton" class="icon is-small"><i class="fas fa-reply"></i></span>
-                            </a>
+                            <div class="has-text-danger">{{ form.body.errors }}</div>
+                            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        <button class="button is-info" type="submit">{% trans "Submit" %}</button>
+                                    </div>
+                                </div>
+                            </nav>
                         </div>
-                    </nav>
-                </div>
-            </article>
+                    </article>
+                </form>
+                <nav class="level is-mobile">
+                    <div class="level-left">
+                        <a class="level-item">
+                            <span id="replyButton" class="icon is-small"><i class="fas fa-reply"></i></span>
+                        </a>
+                    </div>
+                </nav>
+            {% endif %}
+
+
+
+
+        </div>
+        </article>
         {% empty %}
             <div class="has-text-weight-light has-text-centered">{% trans "No comments yet." %}</div>
+
         {% endfor %}
     </div>
 {% endblock %}

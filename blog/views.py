@@ -1,5 +1,4 @@
 from platform import python_version
-from django.shortcuts import render, redirect
 from django import get_version as django_version
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
@@ -9,7 +8,6 @@ from django.views.generic.edit import ModelFormMixin
 import requests
 from blog.models import Post, Comment
 from users.models import User
-from .forms import PostUpload
 
 
 class HomeView(ListView):
@@ -45,6 +43,9 @@ class PostDisplay(ModelFormMixin, DetailView):
     model = Post
     fields = ('body',)
 
+    def form_valid(self, form):
+        return super().form_valid(form)
+
     def get_queryset(self):
         qs = super().get_queryset()
         qs = qs.order_by('created_timestamp')
@@ -68,7 +69,7 @@ class PostComment(CreateView):
             parent_qs = Comment.objects.filter(id=form.parent_id)
             if parent_qs.exists():
                 parent_obj = parent_qs.first()
-        form.parent_obj = parent_obj
+        form.instance.parent = parent_obj
         form.instance.post = self.post_obj
         form.instance.author = self.request.user
         return super().form_valid(form)
@@ -80,6 +81,12 @@ class PostComment(CreateView):
 
     def get_success_url(self):
         return reverse('blog:post_detail', kwargs={'pk': self.post_obj.pk})
+
+
+class PostChildComment(CreateView):
+    model = Comment
+    fields = ('body', 'parent')
+    template_name = 'blog/reply_comment.html'
 
 
 class PostDetailView(LoginRequiredMixin, View):
@@ -130,21 +137,29 @@ class MakeSpecialPost(LoginRequiredMixin, CreateView):
     model = Post
     template_name = 'blog/post_create_special.html'
     fields = ('title', 'body', 'thumbnail')
-    url = 'https://api.chucknorris.io/jokes/random'
-    response = requests.get(url).json()
-    quote = response.get('value')
-    title = " ".join(quote.split()[:3])
-    thumbnail = response.get('icon_url')
+
     context_object_name = 'blog_post'
+
+    def get_chuck_jokes(self):
+        url = 'https://api.chucknorris.io/jokes/random'
+        response = requests.get(url).json()
+        if response:
+            quote = response.get('value')
+            title = " ".join(quote.split()[:3])
+        else:
+            quote = 'The difference between something good and something great is attention to detail.'
+            title = 'Charles'
+        return title, quote
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
     def get_initial(self):
+        title, quote = self.get_chuck_jokes()
         return {
-            'title': self.title,
-            'body': self.quote
+            'title': title,
+            'body': quote
         }
 
     def test_func(self):

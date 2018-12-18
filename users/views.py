@@ -1,11 +1,12 @@
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import DetailView, ListView, RedirectView, UpdateView
 from blog.models import Comment, Post
-from django.http import HttpResponse
 
 User = get_user_model()
 
@@ -60,8 +61,6 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 
 def add_follower(request, username, user_username):
-    # user = get_object_or_404(User, username=User.username)
-    # print(f'Username is : {user.username}')
     logged_in_user = User.objects.filter(username=user_username).first()
     to_follow = User.objects.filter(username=username).first()
     logged_in_user.follows.add(to_follow)
@@ -72,18 +71,19 @@ def add_follower(request, username, user_username):
 
 
 def unffolow(request, username, user_username):
-    # user = get_object_or_404(User, username=User.username)
-    # print(f'Username is : {user.username}')
+    # Todo: logged_in_user == request.user
     logged_in_user = User.objects.filter(username=user_username).first()
+    # Todo: refactor.. get
+    # Todo: before saving check if user is not the following.
+
     to_follow = User.objects.filter(username=username).first()
-    # print(f'{"".join(["-" for _ in range(30)])  }')
-    # print(f'{"".join(["-" for _ in range(30)])  }')
-    # print(f'The guy who is logged in is _____ {logged_in_user.username}')
-    # print(f'The guy who is following {logged_in_user.follows.all()}')
-    # print(f'The page {to_follow}')
-    # print(f'{"".join(["-" for _ in range(30)])  }')
-    logged_in_user.follows.remove(to_follow)
-    to_follow.save()
-    logged_in_user.save()
+    print(to_follow == logged_in_user)
+    if to_follow == logged_in_user:
+        messages.error(request, 'You are not allowed to do that.')
+    else:
+
+        logged_in_user.follows.remove(to_follow)
+        to_follow.save()
+        logged_in_user.save()
 
     return render(request, 'users/unfollow.html', {'user': to_follow})

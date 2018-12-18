@@ -1,9 +1,11 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.dispatch import receiver
 from django.urls import reverse
 from django.core.validators import URLValidator
 from django.utils.translation import ugettext_lazy as _
 from allauth.socialaccount.models import SocialAccount
+from allauth.account.signals import user_signed_up
 
 
 class User(AbstractUser):
@@ -23,9 +25,15 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse('users:detail', kwargs={'username': self.username})
 
-    # def save(self, *args, **kwargs):
-    #     self.avatar_url = SocialAccount.objects.filter(username=self.get_username()).extra_data.get('avatar_url')
-    #     super().save(*args, **kwargs)
-
     def __str__(self):
         return f'{self.username}'
+
+
+@receiver(user_signed_up)
+def social_login_profilepic(sociallogin, user, **kwargs):
+    picture_url = ''
+    if sociallogin:
+        if sociallogin.account.provider == 'github':
+            picture_url = sociallogin.account.get_avatar_url()
+    user.avatar_url = picture_url
+    user.save()

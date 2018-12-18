@@ -8,7 +8,11 @@
         <div class="column has-margin-b-lg">
             <figure class="media">
                 <p class="image is-128x128">
-                    <img src="{{ blog_user.avatar.url }}">
+                    {% if blog_user.avatar_url %}
+                        <img class="is-rounded" src="{{ blog_user.avatar_url }}">
+                    {% else %}
+                        <img class="is-rounded" src="{{ blog_user.avatar.url }}">
+                    {% endif %}
                 </p>
             </figure>
             {% if blog_user.username %}

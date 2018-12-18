@@ -10,8 +10,8 @@ class CommentInline(admin.TabularInline):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    fields = ('post', 'author', 'body', 'parent')
-    list_display = ('body', 'created_timestamp', 'post', 'parent')
+    fields = ('post', 'author', 'body', 'parent',)
+    list_display = ('body', 'created_timestamp', 'post', 'parent',)
     list_filter = ('post',)
 
 

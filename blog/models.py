@@ -49,26 +49,12 @@ class Post(models.Model):
         return f'{self.title}'
 
 
-class CommentManager(models.Manager):
-    def all(self):
-        qs = super(CommentManager, self).filter(parent=None)
-        return qs
-
-    def filter_by_instance(self, instance):
-        content_type = ContentType.objects.get_for_model(instance.__class__)
-        obj_id = instance.id
-        qs = super(CommentManager, self).filter(content_type=content_type, object_id=obj_id).filter(parent=None)
-
-        return qs
-
-
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name=_('post'), related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('author'), related_name='comments')
     body = models.TextField(_('body'))
     created_timestamp = models.DateTimeField(_('created timestamp'), auto_now_add=True)
     parent = models.ForeignKey('self', null=True, related_name='replies', on_delete=models.CASCADE, blank=True)
-    # Todo: https://github.com/HonzaKral/django-threadedcomments/blob/master/threadedcomments/models.py Look into that.
 
     class Meta:
         ordering = ('-created_timestamp',)
