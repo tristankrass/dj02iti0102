@@ -14,13 +14,15 @@
 
 .landing__image {
     min-height: 100vh;
-    background-image: url("/media/blog.jpg");
+    background-image: url("https://images.unsplash.com/photo-1527234639945-70d78416bd7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3419&q=80");
     background-repeat: no-repeat, repeat;
     background-size: cover;
 }
+
 .white_important {
-    color: white!important;
+    color: white !important;
 }
+
 .special {
     line-height: 2rem;
 }
