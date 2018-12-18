@@ -52,6 +52,7 @@
                 </div>
             </article>
         </form>
+
         {% for comment in post.comments.all %}
             {% if comment.parent is None %}
                 <article class="media">
@@ -59,7 +60,7 @@
                     <p class="image is-64x64">
                         <img src="{{ comment.author.avatar.url }}">
                     </p>
-                </figu re>
+                </figure>
                 <div class="media-content">
                 <div class="content">
                     <p>
@@ -129,7 +130,7 @@
                         </div>
                     </article>
                 </form>
-                <nav class="level is-mobile">
+                <nav class="level is-mobile has-margin-t-lg">
                     <div class="level-left">
                         <a class="level-item">
                             <span id="replyButton" class="icon is-small"><i class="fas fa-reply"></i></span>

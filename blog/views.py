@@ -10,6 +10,10 @@ from blog.models import Post, Comment
 from users.models import User
 
 
+class LandingView(TemplateView):
+    template_name = 'blog/landing.html'
+
+
 class HomeView(ListView):
     template_name = 'blog/home.html'
     model = Post

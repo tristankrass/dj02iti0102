@@ -6,15 +6,14 @@
 
 {% block content %}
     <div class="column is-8 is-offset-2">
-        {% if messages %}
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        {% endif %}
+
         <div class="card has-box-shadow">
-            <a class="button is-dark is-large" href="{% url 'users:list' %}">
-                Go Back
-            </a>
+            <h1 class="title">You successfully unfollowed: <span class="has-text-success">{{ user }}</span></h1>
+            <div class="level-right">
+                <a class="button is-dark is-large" href="{% url 'users:list' %}">
+                    Go Back
+                </a>
+            </div>
         </div>
     </div>
 {% endblock content %}

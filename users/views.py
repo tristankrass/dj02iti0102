@@ -1,9 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ValidationError
 from django.db.models.functions import Lower
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import DetailView, ListView, RedirectView, UpdateView
 from blog.models import Comment, Post
@@ -60,30 +59,24 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
         return reverse('users:detail', kwargs={'username': self.request.user.username})
 
 
-def add_follower(request, username, user_username):
-    logged_in_user = User.objects.filter(username=user_username).first()
+def add_follower(request, username):
     to_follow = User.objects.filter(username=username).first()
-    logged_in_user.follows.add(to_follow)
-    to_follow.save()
-    logged_in_user.save()
+    if request.user != to_follow:
+        logged_in_user = User.objects.filter(username=request.user).first()
+        logged_in_user.follows.add(to_follow)
+        to_follow.save()
+        logged_in_user.save()
 
     return render(request, 'users/follow.html')
 
 
-def unffolow(request, username, user_username):
-    # Todo: logged_in_user == request.user
-    logged_in_user = User.objects.filter(username=user_username).first()
-    # Todo: refactor.. get
-    # Todo: before saving check if user is not the following.
-
+def unffolow(request, username):
     to_follow = User.objects.filter(username=username).first()
-    print(to_follow == logged_in_user)
-    if to_follow == logged_in_user:
-        messages.error(request, 'You are not allowed to do that.')
-    else:
-
-        logged_in_user.follows.remove(to_follow)
+    if request.user != to_follow:
+        request.user.follows.remove(to_follow)
         to_follow.save()
-        logged_in_user.save()
+        request.user.save()
+    else:
+        messages.error(request, 'You are not allowed to do that.')
 
     return render(request, 'users/unfollow.html', {'user': to_follow})

@@ -40,26 +40,28 @@
         <h1 class="title">Here are {{ blog_user.username }} Recent Posts.</h1>
         <hr>
         <section class="section">
-            <div class="columns">
+            <div class="tile is-ancestor" style="flex-wrap: wrap">
                 {% for blog_post in blog_posts %}
-                    <div class="column">
-                        <h4 class="title is-4 is-marginless">
-                            <a class="has-text-dark"
-                               href="{{ blog_post.get_absolute_url }}">{{ blog_post.title|truncatechars:50 }}</a>
-                        </h4>
-                        <p>
-                            {{ blog_post.body|truncatechars:50 }}
-                        </p>
-                        {% if blog_post.thumbnail %}
-                            <a class="has-text-dark" href="{{ blog_post.get_absolute_url }}">
-                                <figure class="is-marginless">
-                                    <img class="is-128x128" src="{{ blog_post.thumbnail.url }}">
-                                </figure>
-                            </a>
-                        {% endif %}
+                    <div class="tile is-parent is-4">
+                        <article class="tile is-child box">
+                            <h4 class="title is-4 has-margin-md">
+                                <a class="has-text-dark"
+                                   href="{{ blog_post.get_absolute_url }}">{{ blog_post.title|truncatechars:50 }}</a>
+                            </h4>
+                            <p class="has-margin-md">
+                                {{ blog_post.body|truncatechars:50 }}
+                            </p>
+                            {% if blog_post.thumbnail %}
+                                <a class="has-text-dark" href="{{ blog_post.get_absolute_url }}">
+                                    <figure class="is-marginless">
+                                        <img class="is-128x128" src="{{ blog_post.thumbnail.url }}">
+                                    </figure>
+                                </a>
+                            {% endif %}
+                        </article>
+
                     </div>
                 {% endfor %}
-
             </div>
         </section>
     {% endif %}

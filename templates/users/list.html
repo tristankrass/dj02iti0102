@@ -42,14 +42,14 @@
                         </div>
                         <div class="level-right">
                             <a class="button is-primary is-rounded is-small"
-                               href="{% url 'users:follow'  blog_user.username user.username %}">
+                               href="{% url 'users:follow'  blog_user.username %}">
 
                                 <span class="icon is-small">
                                   <i class="fas fa-heart"></i>
                                     {% if blog_user in user.follows.all %}
                                         </span>{% trans "Following" %}<span>
                                          <a class="button is-warning is-rounded is-small"
-                                            href="{% url 'users:unfollow'  blog_user.username user.username %}">
+                                            href="{% url 'users:unfollow'  blog_user.username %}">
                                         <span class="icon is-small">
                                          <i class="fas fa-exclamation-circle"></i>
                                                 </span>{% trans "UnFollow" %}<span>

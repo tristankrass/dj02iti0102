@@ -11,3 +11,16 @@
 .is-justified-center {
     justify-content: center;
 }
+
+.landing__image {
+    min-height: 100vh;
+    background-image: url("/media/blog.jpg");
+    background-repeat: no-repeat, repeat;
+    background-size: cover;
+}
+.white_important {
+    color: white!important;
+}
+.special {
+    line-height: 2rem;
+}
