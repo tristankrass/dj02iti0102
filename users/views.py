@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models.functions import Lower
 from django.shortcuts import render
 from django.urls import reverse
@@ -26,13 +26,18 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class UserUpdateView(UpdateView):
+class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = User
-    fields = ('username', 'avatar')
     template_name = 'users/changeDetails.html'
+    fields = ('username', 'avatar')
     context_object_name = 'blog_user'
     slug_field = 'username'
     slug_url_kwarg = 'username'
+    permission_denied_message = 'Hey Mate! No cookie for you!'
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj == self.request.user
 
 
 class UserListView(LoginRequiredMixin, ListView):
