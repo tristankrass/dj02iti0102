@@ -4,16 +4,29 @@ this project is to make a CMS like medium or something similar.
 People can sign up with their discord or github account.
 People can then write posts, follow people and comment under other users posts.
 
-## Steps to complete when running the project.
-✂ `pipenv install --python 3.7.1`
+## Steps to get the project up and running.
+####NB! You should have docker pre-installed on your machine.
+First navigate to the root folder of the cloned folder.
 
-✂ pipenv shell
+Build initial image from a Dockerfile
+✂ `docker build .`
 
-✂ python manage.py migrate
+Make migrations inside the container
+✂ `docker-compose run web python /code/manage.py migrate`
 
-✂ python manage.py createsuperuser
+Make superuser for the admin inside the container
+✂ `docker-compose run web python /code/manage.py createsuperuser`
 
-✂ python manage.py runserver
+Last step
+✂ `docker-compose up -d --build`
+
+Type in `docker ps` and you should see two containers running:
+    1 for django
+    2 for postreSQL
+---
+
+Django should now be 🏃 on  http://127.0.0.1:8000/
+
 ---
 # Database (Updated )
 Database is now running on postreSQL and is configured via Docker.
@@ -26,7 +39,6 @@ Database is now running on postreSQL and is configured via Docker.
 * [SQLLite3](https://www.sqlite.org/index.html)
 * [django-allauth](https://github.com/pennersr/django-allauth)
 
-
-
-
 ### Please feel free to contribute 🙏
+
+Initial project was provided by @rrebase.
