@@ -1,10 +1,11 @@
 ### Second assignment with Django
 This is the final assignement of the first semester. Goal of
-this project is to make a CMS like medium or something similar.
 People can sign up with their discord or github account.
 People can then write posts, follow people and comment under other users posts.
 
 ## Steps to get the project up and running.
+* Add your own security key to secret_key.json file.
+
 ####NB! You should have docker pre-installed on your machine.
 First navigate to the root folder of the cloned folder.
 
