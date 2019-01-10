@@ -9,15 +9,19 @@ People can then write posts, follow people and comment under other users posts.
 First navigate to the root folder of the cloned folder.
 
 Build initial image from a Dockerfile
+
 ✂ `docker build .`
 
 Make migrations inside the container
+
 ✂ `docker-compose run web python /code/manage.py migrate`
 
 Make superuser for the admin inside the container
+
 ✂ `docker-compose run web python /code/manage.py createsuperuser`
 
 Last step
+
 ✂ `docker-compose up -d --build`
 
 Type in `docker ps` and you should see two containers running:
