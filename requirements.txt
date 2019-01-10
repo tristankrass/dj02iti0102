@@ -1,0 +1,9 @@
+django==2.1.2
+django-allauth==0.37.0
+django-hashid-field==2.1.5
+pillow==5.3.0
+ipython==7.1.1
+gunicorn==19.9.0
+whitenoise==3.3.1
+psycopg2-binary==2.7.6.1
+django-dotenv==1.4.2

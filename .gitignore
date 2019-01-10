@@ -331,6 +331,7 @@ tags
 .ipython/
 .env
 .envs/*
+secret_key.json
 
 media/*
 !media/default.png
