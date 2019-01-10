@@ -43,7 +43,6 @@
                         <div class="level-right">
                             <a class="button is-primary is-rounded is-small"
                                href="{% url 'users:follow'  blog_user.username %}">
-
                                 <span class="icon is-small">
                                   <i class="fas fa-heart"></i>
                                     {% if blog_user in user.follows.all %}
