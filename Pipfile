@@ -9,7 +9,7 @@ django-hashid-field = "==2.1.5"
 ipython = "==7.1.1"
 gunicorn = "==19.9.0"
 whitenoise = "==3.3.1"
-Django = "==2.1.2"
+Django = "==2.1.11"
 Pillow = "==5.3.0"
 
 [dev-packages]
